@@ -1,0 +1,117 @@
+# 定长型
+
+定长型：
+
+直接考虑头和尾就行。
+
+只需要考虑**移除（离开窗口）的字母 a 是不是元音，以及添加（进入窗口）的字母 i 是不是元音即可**
+
+然后考虑窗口大小不足的时候,continue
+
+## [1456. 定长子串中元音的最大数目](https://leetcode.cn/problems/maximum-number-of-vowels-in-a-substring-of-given-length/)
+
+给你字符串 `s` 和整数 `k` 。
+
+请返回字符串 `s` 中长度为 `k` 的单个子字符串中可能包含的最大元音字母数。
+
+英文中的 **元音字母** 为（`a`, `e`, `i`, `o`, `u`）。
+
+
+
+解决定长窗口的问题：
+
+只需要考虑**移除（离开窗口）的字母 a 是不是元音，以及添加（进入窗口）的字母 i 是不是元音即可**
+
+
+
+```java
+class Solution1456{
+    public int maxVowels(String S,int k ){
+        char[] s = S.toCharArray();
+        int ans  = 0;
+        int vowel  = 0;
+
+        for (int i =0;i<s.length;i++){
+            if (s[i] == 'a' || s[i] == 'e' || s[i] == 'i' || s[i] == 'o' || s[i] == 'u'){
+                vowel++;
+            }
+            if (i<k-1){//窗口大小不到k
+                continue;
+            }
+            ans = Math.max(ans,vowel);
+            char out = s[i-k+1];
+            if (out == 'a' || out == 'e' || out == 'i' || out == 'o' || out == 'u'){
+                vowel--;
+            }
+        }
+        return ans;
+
+    }
+}
+```
+
+就是这个用法。
+
+## [643. 子数组最大平均数 I](https://leetcode.cn/problems/maximum-average-subarray-i/)
+
+给你一个由 `n` 个元素组成的整数数组 `nums` 和一个整数 `k` 。
+
+请你找出平均数最大且 **长度为 `k`** 的连续子数组，并输出该最大平均数。
+
+任何误差小于 `10-5` 的答案都将被视为正确答案。
+
+
+
+这也是一个定长的滑动窗口，按照模板做就行，维护一个最大值即可
+
+```java
+class Solution643{
+    public double findMaxAverage(int[] nums, int k){
+        int maxS = Integer.MIN_VALUE;
+        int s=  0;
+        for (int i =0;i<nums.length;i++){
+            s +=nums[i];
+            if (i<k-1){
+                continue;
+            }
+            maxS = Math.max(maxS,s);
+            s -=nums[i-k+1];
+        }
+        return (double) maxS/k;
+    }
+}
+
+```
+
+示例代码如下
+
+## [1343. 大小为 K 且平均值大于等于阈值的子数组数目](https://leetcode.cn/problems/number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold/)
+
+给你一个整数数组 `arr` 和两个整数 `k` 和 `threshold` 。
+
+请你返回长度为 `k` 且平均值大于等于 `threshold` 的子数组数目。
+
+这个题在上面的基础上改就行
+
+```java
+class Solution1343{
+    public int numOfSubarrays(int[] arr, int k, int threshold){
+        int ans = 0;
+        int s=  0;
+        for (int i =0;i<arr.length;i++){
+            s +=arr[i];
+            if (i<k-1){
+                continue;
+            }
+            if (s>=threshold*k){
+                ans++;
+            }
+            s -=arr[i-k+1];
+        }
+        return ans;
+    }
+}
+
+```
+
+这里不是求最大了，是每一个都求，所以不用maxS了
